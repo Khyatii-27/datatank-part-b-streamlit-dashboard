@@ -264,12 +264,12 @@ with st.sidebar.expander("AI Topic Filter", expanded=True):
         placeholder="All AI topics"
     )
 
-with st.sidebar.expander("Manual Theme Filter", expanded=False):
+with st.sidebar.expander("Manually Coded Theme Filter", expanded=False):
     selected_themes = st.multiselect(
-        "Choose manual themes",
+        "Choose manually coded themes",
         options=sorted(df[theme_col].unique()),
         default=[],
-        placeholder="All manual themes"
+        placeholder="All Manually Coded Themes"
     )
 
 with st.sidebar.expander("Sentiment Filter", expanded=False):
@@ -349,9 +349,7 @@ st.markdown(
     <div class="top-banner">
         <h1>The Data Tank: AI and Media Ecosystem Dashboard</h1>
         <p>
-        A client-facing project outcome that transforms Dataset 2 into an interactive view of the AI and media ecosystem.
-        The dashboard helps identify dominant issues, compare manual themes with AI-generated topics, review sentiment framing,
-        and trace insights back to the coded evidence.
+        Visualising a dataset of recent literature excerpts on the Generative AI and media ecosystem. The dashboard helps identify dominant issues, compare manually coded themes with AI-generated topics, review sentiment framing, and trace insights back to the coded evidence
         </p>
     </div>
     """,
@@ -363,15 +361,15 @@ st.markdown(
     <div class="mini-grid">
         <div class="mini-card">
             <h4>What this shows</h4>
-            <p>Main issues, patterns, and relationships found in coded AI and media text data, including topics, sentiment, manual themes, and source perspectives.</p>
+            <p>Main issues, patterns, and relationships found in coded AI and media text data, including topics, sentiment, manually coded themes, and source perspectives.</p>
         </div>
         <div class="mini-card">
             <h4>Why it matters</h4>
-            <p>It converts a coded dataset into a usable ecosystem resource that can support internal analysis, client conversations, and external storytelling.</p>
+            <p>It turns a coded dataset into a usable visualisation resource that can support internal analysis, stakeholder conversations, and storytelling.</p>
         </div>
         <div class="mini-card">
             <h4>Project outcome</h4>
-            <p>An interactive evidence-based tool for exploring, comparing, and presenting AI and media ecosystem patterns in a clear and reusable format.</p>
+            <p>An interactive evidence-based tool for exploring, comparing, and presenting AI and manually-coded Generative AI & media ecosystem themes in a clear and reusable format.</p>
         </div>
     </div>
     """,
@@ -399,7 +397,7 @@ with c1:
 with c2:
     st.metric("AI Topics", unique_topics)
 with c3:
-    st.metric("Manual Themes", unique_themes)
+    st.metric("Manually Coded Themes", unique_themes)
 with c4:
     st.metric("Source Types", unique_sources)
 with c5:
@@ -414,7 +412,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(
     [
         "Topic Overview",
         "Sentiment Analysis",
-        "Manual vs AI Themes",
+        "Manually Coded vs AI Themes",
         "Source Perspective",
         "Evidence Table",
     ]
@@ -497,6 +495,21 @@ with tab2:
         <div class="section-box">
             <p>
             This section looks at how issues are framed across the selected text excerpts. It helps show whether particular topics are discussed in more critical, neutral, or positive ways and where the tone of discussion is more mixed.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class="section-box">
+            <p>
+            <strong>What sentiment means here:</strong> In this dashboard, sentiment refers to the tone of each coded text excerpt. 
+            A positive sentiment suggests the excerpt frames Generative AI in a supportive or opportunity-focused way, 
+            a neutral sentiment suggests a balanced or descriptive framing, and a negative sentiment suggests a more critical, 
+            cautious, or risk-focused framing. The sentiment score provides a numerical indication of this tone, helping compare 
+            how different AI-media topics are discussed across the dataset.
             </p>
         </div>
         """,
@@ -596,15 +609,15 @@ with tab2:
     )
 
 # ============================================================
-# TAB 3: Manual vs AI Themes
+# TAB 3: manually coded vs AI Themes
 # ============================================================
 with tab3:
-    st.subheader("4. Most Common Manual Themes")
+    st.subheader("4. Most Common Manually Coded Themes")
     st.markdown(
         """
         <div class="section-box">
             <p>
-            This section focuses on the manual coding structure and how it connects with AI-generated topics. It helps show whether the automated topic model reinforces the manual analysis and where broader manual themes contain multiple underlying patterns.
+            This section focuses on the manually coded thematic structure and how it connects with AI-generated topics. It helps show whether the automated topic model reinforces the manually coded analysis and where broader manually coded themes contain multiple underlying patterns.
             </p>
         </div>
         """,
@@ -612,15 +625,15 @@ with tab3:
     )
 
     theme_counts = filtered_df[theme_col].value_counts().head(15).reset_index()
-    theme_counts.columns = ["Manual Theme", "Number of Excerpts"]
+    theme_counts.columns = ["Manually Coded Theme", "Number of Excerpts"]
 
     fig_theme = px.bar(
         theme_counts,
         x="Number of Excerpts",
-        y="Manual Theme",
+        y="Manually Coded Theme",
         orientation="h",
         text="Number of Excerpts",
-        title="Top Manual Themes in the Dataset",
+        title="Top Manually Coded Themes in the Dataset",
         color="Number of Excerpts",
         color_continuous_scale="Teal",
     )
@@ -628,20 +641,20 @@ with tab3:
     style_fig(fig_theme, height=620)
     st.plotly_chart(fig_theme, use_container_width=True)
 
-    lead_theme = theme_counts.iloc[0]["Manual Theme"]
+    lead_theme = theme_counts.iloc[0]["Manually Coded Theme"]
     lead_theme_count = int(theme_counts.iloc[0]["Number of Excerpts"])
 
     st.markdown(
         f"""
         <div class="insight-box">
-            <p><strong>Project reading:</strong> Manual themes represent the human-coded structure of the dataset. In the current selection, <strong>{lead_theme}</strong> is the most prominent manual theme with <strong>{lead_theme_count}</strong> excerpts.
+            <p><strong>Project reading:</strong> Manually Coded Themes represent the human-coded structure of the dataset. In the current selection, <strong>{lead_theme}</strong> is the most prominent manually coded theme with <strong>{lead_theme_count}</strong> excerpts.
             This helps show which human-coded issues are most central within the selected ecosystem view.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.subheader("5. Manual Theme vs AI Topic Alignment")
+    st.subheader("5. Manually Coded Theme vs AI Topic Alignment")
 
     alignment_matrix = pd.crosstab(filtered_df[theme_col], filtered_df[topic_col], normalize="index") * 100
 
@@ -649,8 +662,8 @@ with tab3:
         alignment_matrix,
         text_auto=".1f",
         aspect="auto",
-        title="Percentage Alignment Between Manual Themes and AI-Generated Topics",
-        labels=dict(x="AI Topic", y="Manual Theme", color="Percentage"),
+        title="Percentage Alignment Between Manually Coded Themes and AI-Generated Topics",
+        labels=dict(x="AI Topic", y="Manually Coded Theme", color="Percentage"),
     )
     style_fig(fig_alignment, height=780)
     st.plotly_chart(fig_alignment, use_container_width=True)
@@ -658,14 +671,14 @@ with tab3:
     st.markdown(
         """
         <div class="insight-box">
-            <p><strong>Why this adds value:</strong> The heatmap shows how closely the manual thematic structure aligns with the AI-generated topic structure.
-            Stronger cells suggest stronger overlap, while a more spread pattern suggests internal diversity. This helps explain where AI-assisted analysis supports the existing manual coding and where it reveals added complexity.</p>
+            <p><strong>Why this adds value:</strong> The heatmap shows how closely the manually coded thematic structure aligns with the AI-generated topic structure.
+            Stronger cells suggest stronger overlap, while a more spread pattern suggests internal diversity. This helps explain where AI-assisted analysis supports the existing manually coded structure and where it reveals added complexity.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.subheader("6. Hidden Sub-Patterns in Manual Themes")
+    st.subheader("6. Hidden Sub-Patterns in Manually Coded Themes")
 
     discovery_filtered = (
         filtered_df.groupby(theme_col)
@@ -677,7 +690,7 @@ with tab3:
         .reset_index()
     )
     discovery_filtered.columns = [
-        "Manual Theme",
+        "Manually Coded Theme",
         "Unique_AI_Topics",
         "Number_of_Excerpts",
         "Primary_AI_Topic",
@@ -688,11 +701,11 @@ with tab3:
     fig_discovery = px.bar(
         top_discovery,
         x="Unique_AI_Topics",
-        y="Manual Theme",
+        y="Manually Coded Theme",
         orientation="h",
         color="Primary_AI_Topic",
         text="Unique_AI_Topics",
-        title="Manual Themes Containing the Most AI-Generated Subtopics",
+        title="Manually Coded Themes Containing the Most AI-Generated Subtopics",
     )
     fig_discovery.update_layout(yaxis={"categoryorder": "total ascending"})
     style_fig(fig_discovery, height=660)
@@ -701,8 +714,8 @@ with tab3:
     st.markdown(
         """
         <div class="insight-box">
-            <p><strong>Why this is important:</strong> Some manual themes capture several distinct AI-related subtopics rather than one narrow issue.
-            This chart highlights where the manual coding contains the richest internal variety, helping identify themes that may need deeper unpacking in future presentations, reporting, or stakeholder discussions.</p>
+            <p><strong>Why this is important:</strong> Some manually coded themes capture several distinct AI-related subtopics rather than one narrow issue.
+            This chart highlights where the manually coded structure contains the richest internal variety, helping identify themes that may need deeper unpacking in future presentations, reporting, or stakeholder discussions.</p>
         </div>
         """,
         unsafe_allow_html=True,
